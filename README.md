@@ -28,5 +28,8 @@ sock-shop를 위한 helm-chart 만드는 중
 curl -O https://raw.githubusercontent.com/microservices-demo/microservices-demo/master/deploy/kubernetes/complete-demo.yaml
 
 xray + app mesh test & apply
-```
 
+
+App mesh test : 설정완료후, 파드내에 envoy 컨테이너 적용되는 것 확인.
+이 다음에 할 일은 app mesh + xray 통합되는 지 체크
+```
