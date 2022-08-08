@@ -70,6 +70,41 @@ Helm(){
    rm get_helm.sh
 }
 
+Appmesh(){
+   echo "Install App mesh"
+   curl -o pre_upgrade_check.sh https://raw.githubusercontent.com/aws/eks-charts/master/stable/appmesh-controller/upgrade/pre_upgrade_check.sh
+   sh ./pre_upgrade_check.sh
+
+   echo "Install Helm eks-charts & Apply App Mesh CRD"
+   helm repo add eks https://aws.github.io/eks-charts
+   kubectl apply -k "https://github.com/aws/eks-charts/stable/appmesh-controller/crds?ref=master"
+
+   echo "Create ns appmesh-system"
+   kubectl create ns appmesh-system
+
+   export CLUSTER_NAME=aws-dna
+   export AWS_REGION=ap-northeast-1
+
+   echo "Create OIDC identity provier"
+   eksctl utils associate-iam-oidc-provider --region=$AWS_REGION --cluster $CLUSTER_NAME --approve
+
+   echo "Create IAM Role attach AWSAppMeshFullAccess and AWSCloudMapFullAccess"
+   eksctl create iamserviceaccount --cluster $CLUSTER_NAME \
+    --namespace appmesh-system \
+    --name appmesh-controller \
+    --attach-policy-arn  arn:aws:iam::aws:policy/AWSCloudMapFullAccess,arn:aws:iam::aws:policy/AWSAppMeshFullAccess \
+    --override-existing-serviceaccounts \
+    --approve
+
+   echo "Deploy App Mesh Controller"
+   helm upgrade -i appmesh-controller eks/appmesh-controller \
+    --namespace appmesh-system \
+    --set region=$AWS_REGION \
+    --set serviceAccount.create=false \
+    --set serviceAccount.name=appmesh-controller
+}
+
+
 BAR="===================================="
 echo "${BAR}"
 echo "What do you want ? "
@@ -77,6 +112,9 @@ echo "${BAR}"
 echo "[0] Install kubectl & eksctl"
 echo "[1] Install Amazon CLI2"
 echo "[2] Install Terraform"
+echo "[3] Install Helm"
+echo "[4] Apply AppMesh"
+
 
 echo "${BAR}"
 echo -n "Please insert a key as you need = "
@@ -87,6 +125,7 @@ case $choice in
         1) Awscli;;
         2) Terraform;;
         3) Helm;;
+        4) Appmesh;;
         *) echo "Bad choice"
                 exit 1
 esac

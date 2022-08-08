@@ -1,0 +1,12 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "appmesh:StreamAggregatedResources",
+            "Resource": [
+                "arn:aws:appmesh:$region-code:$account-id:mesh/my-mesh/virtualNode/carts-svc-virtual-node_sock-shop"
+            ]
+        }
+    ]
+}
