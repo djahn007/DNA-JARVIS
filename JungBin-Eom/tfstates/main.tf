@@ -1,6 +1,6 @@
 provider "aws" {
   region  = "ap-northeast-2"
-  profile = "default"
+  profile = "ricky-mfa"
 }
 
 # S3 bucket for backend

@@ -20,9 +20,8 @@ module "vpc" {
   secondary_cidr_blocks = slice(var.vpc_cidrs, 1, length(var.vpc_cidrs))
   azs                   = slice(data.aws_availability_zones.available.names, 0, 3)
 
-  public_subnets   = var.public_subnet_cidrs
-  private_subnets  = var.private_subnet_cidrs
-  database_subnets = var.database_subnet_cidrs
+  public_subnets  = var.public_subnet_cidrs
+  private_subnets = var.private_subnet_cidrs
 
   public_subnet_tags = {
     network                  = "Public",
@@ -31,11 +30,6 @@ module "vpc" {
 
   private_subnet_tags = {
     network                           = "Private",
-    "kubernetes.io/role/internal-elb" = 1
-  }
-
-  database_subnet_tags = {
-    network                           = "Database",
     "kubernetes.io/role/internal-elb" = 1
   }
 

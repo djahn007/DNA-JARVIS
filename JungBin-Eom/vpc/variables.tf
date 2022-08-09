@@ -17,18 +17,12 @@ variable "vpc_cidrs" {
 
 variable "public_subnet_cidrs" {
   type        = list(string)
-  default     = ["10.0.0.0/19"]
+  default     = ["10.0.0.0/19", "10.0.32.0/19"]
   description = "public subnets cidr list"
 }
 
 variable "private_subnet_cidrs" {
   type        = list(string)
-  default     = ["10.0.32.0/19"]
+  default     = ["10.0.64.0/19", "10.0.96.0/19"]
   description = "private subnets cidr list"
-}
-
-variable "database_subnet_cidrs" {
-  type        = list(string)
-  default     = ["10.0.64.0/19"]
-  description = "database subnets cidr list"
 }

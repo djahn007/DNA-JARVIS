@@ -6,11 +6,10 @@ module "default_nodes" {
   name            = "default-node-group-${count.index}"
   use_name_prefix = false
 
-  cluster_name    = var.cluster_name
+  cluster_name    = local.cluster_name
   cluster_version = "1.22"
 
   labels = {
-    eks-name   = var.cluster_name
     nodeType   = "default"
     nodeSubnet = "public"
   }
@@ -45,7 +44,7 @@ module "default_nodes" {
 
   create_security_group = false
   create_iam_role       = false
-  iam_role_arn          = module.eks.node_iam_role_arn
+  iam_role_arn          = aws_iam_role.managednode.arn
 
   tags = local.common_tags
 
