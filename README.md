@@ -4,32 +4,50 @@
 ```
 선택한 MSA 예제 : Sock-shop
 
-참고
-https://gasidaseo.notion.site/MSA-12-382799b72d5d49a9a15dcafd123c1aa8#266dcdb1c33d419bad99866d504badbb
-
 ```
 ## aws service to use
 ```
-Xray + app mesh
+EKS, Cloudwatch, S3, Lambda, Athena, Quicksight
+Chatbot, WAF, Route53, CloudTrail, Managed Grafana, SNS etc .
+
 ```
-## what i'm working on
+
+## Flow
 ```
-1) init setup script
-2) Create helm chart
-3) Testing Xray + app mesh
-...
+Step1. Visualization
 
-개인적으로 테스트할 때, 쉽게 설치해서 사용할 수 있도록 하는 init.sh 작성중
+a. Cloudwatch container insights Setting
+b. Managed Grafana + Pixie
+(https://github.com/pixie-io/grafana-plugin/)
+(https://github.com/pixie-io/pixie)
+c. Alert Setting (Metric : CPU, Memory)
+d. Dashboard Setup ( Metric / Service Map )
 
-sock-shop를 위한 helm-chart 만드는 중
-아래 명령어를 통해서 받아오는 manifest 파일을 커스텀하게 세팅할 수 있도록
-헬름 차트 만들고 + 수정중
+Step2. ChatOps
 
-curl -O https://raw.githubusercontent.com/microservices-demo/microservices-demo/master/deploy/kubernetes/complete-demo.yaml
+a. botkube Setup
+b. AWS Chatbot Setup
+c. Cloudwatch , SNS Setup
+d. Lambda Setup (ex. listPods, Rollback)
 
-xray + app mesh test & apply
+Step3. log-based report or Dashboard
+a. Cloudwatch -> Lambda -> S3
+b. Athena + QuickSight
+```
 
+## what we are working on
+```
+[ helm chart update & test ]
+* ingress에 host , annotation WAF setting & test
+* Apply HPA
+*
 
-App mesh test : 설정완료후, 파드내에 envoy 컨테이너 적용되는 것 확인.
-이 다음에 할 일은 app mesh + xray 통합되는 지 체크
+[ Chatbot update & test ]
+* chatbot command : create helm rollback functions
+* chatbot command : create change ingress waf id (maybe kubectl patch ..)
+
+[ Logging (not yet)]
+* AWS Chatbot or botkube 둘다 EKS api-server logging enabled 설정해야, 봇으로 쿠버네티스에 보낸 커맨드 로그 수집 가능
+* 이 로그 바탕으로 Cloudwatch -> S3 -> Athena -> QuicksSight까지.
+
 ```

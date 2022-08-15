@@ -1,0 +1,99 @@
+communications:
+  'default-group':
+    slack:
+      enabled: false # Tests will override this temporarily
+      token: "" # Provide a valid token for BotKube app
+      channels:
+        'default':
+          name: "" # Tests will override this temporarily
+          bindings:
+            executors:
+              - kubectl-read-only
+              - kubectl-wait-cmd
+              - kubectl-exec-cmd
+              - kubectl-allow-all
+            sources:
+              - k8s-events
+        'secondary':
+          name: "" # Tests will override this temporarily
+          bindings:
+            executors:
+              - kubectl-read-only
+            sources:
+              - k8s-events
+
+sources:
+  'k8s-events':
+    kubernetes:
+      resources:
+        - name: v1/configmaps
+          namespaces:
+            include:
+              - botkube
+          events:
+            - create
+            - update
+            - delete
+        - name: v1/pods
+          namespaces:
+            include:
+              - botkube
+          events:
+            - create
+executors:
+  'kubectl-read-only':
+    kubectl:
+      enabled: true
+      namespaces:
+        include:
+          - botkube
+          - default
+  'kubectl-wait-cmd':
+    kubectl:
+      enabled: true
+      namespaces:
+        include:
+          - botkube
+          - default
+      commands:
+        verbs: [ "wait" ]
+      restrictAccess: false
+  'kubectl-exec-cmd':
+    kubectl:
+      enabled: false
+      namespaces:
+        include:
+          - botkube
+          - default
+      commands:
+        verbs: [ "exec" ]
+      restrictAccess: false
+  'kubectl-allow-all':
+    kubectl:
+      enabled: true
+      namespaces:
+        include:
+          - ".*"
+      commands:
+        verbs: [ "get" ]
+        resources: [ "deployments" ]
+  'kubectl-not-bound-to-any-channel':
+    kubectl:
+      enabled: true
+      namespaces:
+        include:
+          - ".*"
+      commands:
+        verbs: [ "port-forward" ]
+        resources: [ "deployments" ]
+
+settings:
+  clusterName: sample
+  upgradeNotifier: false
+
+extraAnnotations:
+  botkube.io/disable: "true"
+e2eTest:
+  slack:
+    testerAppToken: "" # Provide a valid token for BotKube tester app
+    additionalContextMessage: "" # Optional additional context
