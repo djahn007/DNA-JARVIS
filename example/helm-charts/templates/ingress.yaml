@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: msa-ingress
+  namespace: sock-shop
+  annotations:
+    #alb.ingress.kubernetes.io/wafv2-acl-arn: arn:aws:wafv2:ap-northeast-1:$ACCOUND_ID:regional/webacl/dna-waf-public/
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-1:$ACCOUND_ID:certificate/
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    ## SSL Settings
+    # SSL Redirect Setting
+spec:
+  rules:
+  - http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          serviceName: front-end
+          servicePort: 80
