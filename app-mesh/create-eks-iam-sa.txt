@@ -1,7 +1,0 @@
-eksctl create iamserviceaccount \
-    --cluster aws-dna \
-    --namespace sock-shop \
-    --name iam-svc-sa-test \
-    --attach-policy-arn  arn:aws:iam::$accound-id:policy/my-policy-1 \
-    --override-existing-serviceaccounts \
-    --region $region-code --approve
