@@ -1,0 +1,16 @@
+{{ range $k, $v := .Values.bindings }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: jarvis-user-crb-{{ $k }}
+subjects:
+  {{- range $v.users }}
+  - kind: User
+    name: {{ tpl . $ | quote }}
+  {{- end }}
+roleRef:
+  kind: ClusterRole
+  name: {{ $v.roleName }}
+  apiGroup: rbac.authorization.k8s.io
+---
+{{ end }}

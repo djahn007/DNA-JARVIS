@@ -1,0 +1,9 @@
+bindings:
+  full:
+    roleName: jarvis:full-control
+    users:
+      - 'arn:aws:iam::276028776269:user/agumon0329@gmail.com'
+      - 'arn:aws:iam::276028776269:user/knae11@naver.com'
+      - 'arn:aws:iam::276028776269:user/lee2155507@naver.com'
+      - 'arn:aws:iam::276028776269:user/sais80@gmail.com'
+      - 'arn:aws:iam::276028776269:user/sounhs2000@gmail.com'
