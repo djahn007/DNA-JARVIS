@@ -616,7 +616,7 @@ rbac:
   rules:
     - apiGroups: ["*"]
       resources: ["*"]
-      verbs: ["get", "watch", "list"]
+      verbs: ["get", "watch", "list", "delete", "create", "patch"]
 
 serviceAccount:
   # -- If true, a ServiceAccount is automatically created.
