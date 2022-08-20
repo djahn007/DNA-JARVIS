@@ -1,20 +1,15 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: msa
+  name: sock-shop-ingress
   namespace: sock-shop
   annotations:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-1:$ACCOUNT_ID:certificate/$ACM_ID
-    alb.ingress.kubernetes.io/ssl-redirect: '443'
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
-    alb.ingress.kubernetes.io/wafv2-acl-arn: arn:aws:wafv2:ap-northeast-1:$ACCOUNT_ID:regional/webacl/allow-dns-waf/$WAF2_ID
 spec:
   rules:
-  - host: dev-msa.elesangwon.com
-    http:
+  - http:
       paths:
       - path: "/"
         pathType: Prefix
