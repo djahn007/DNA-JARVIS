@@ -1,0 +1,103 @@
+name: RollBack
+on:
+  repository_dispatch:
+    types: [rollback]
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check Github action trigger
+        run:  |
+          echo "Event '${{ github.event.action }}' received from '${{ github.event.client_payload.repository }}'"
+      - uses: aws-actions/setup-sam@v2
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+      - name: install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.20.0'
+      - name: install helm
+        uses: azure/setup-helm@v3
+        with:
+          version: latest
+      - name: update kubeconfig
+        run: |
+          aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER }}
+          echo ${{ github.event.client_payload.release-name }}
+          echo ${{ github.event.client_payload.version }}
+          echo ${{ github.event.client_payload.namespace }}
+      - name: Rollback
+        run: |
+          helm rollback ${{ github.event.client_payload.release-name }} ${{ github.event.client_payload.version }} -n ${{ github.event.client_payload.namespace }}
+      - name: Send to Slack (Success)
+        if: success()
+        uses: slackapi/slack-github-action@v1.18.0
+        with:
+          payload: |
+            {
+              "attachments": [
+                  {
+                      "fallback": "✅ Success Helm rollback",
+                      "color": "#3AA3E3",
+                      "text": "✅ Success Helm rollback",
+                      "fields": [
+                          {
+                              "title": "Release-name",
+                              "value": "${{ github.event.client_payload.release-name }}",
+                              "short": true
+                          },
+                          {
+                              "title": "Version",
+                              "value": "${{ github.event.client_payload.version }}",
+                              "short": true
+                          },
+                          {
+                              "title": "Namespace",
+                              "value": "${{ github.event.client_payload.namespace }}",
+                              "short": true
+                          }
+                      ]
+                  }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      - name: Send to Slack(Failure)
+        if: failure()
+        uses: slackapi/slack-github-action@v1.18.0
+        with:
+          payload: |
+            {
+              "attachments": [
+                  {
+                      "fallback": "❌ Failure Helm rollback",
+                      "color": "#3AA3E3",
+                      "text": "❌ Failure Helm rollback",
+                      "fields": [
+                          {
+                              "title": "Release-name",
+                              "value": "${{ github.event.client_payload.release-name }}",
+                              "short": true
+                          },
+                          {
+                              "title": "Version",
+                              "value": "${{ github.event.client_payload.version }}",
+                              "short": true
+                          },
+                          {
+                              "title": "Namespace",
+                              "value": "${{ github.event.client_payload.namespace }}",
+                              "short": true
+                          }
+                      ]
+                  }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

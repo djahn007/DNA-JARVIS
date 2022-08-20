@@ -30,6 +30,6 @@ aws iam create-policy --policy-name AllowExternalDNSUpdates --policy-document fi
 eksctl create iamserviceaccount \
     --name external-dns \
     --namespace kube-system \
-    --cluster aws-dna \
+    --cluster jarvis-ap-northeast-2 \
     --attach-policy-arn arn:aws:iam::$ACCOUNT_ID:policy/AllowExternalDNSUpdates \
-    --approve --region ap-northeast-1 --override-existing-serviceaccounts
+    --approve --region ap-northeast-2 --override-existing-serviceaccounts --profile jarvis-sangwon
