@@ -40,7 +40,7 @@ module "default_nodes" {
 
   vpc_id                 = data.terraform_remote_state.vpc.outputs.vpc_id
   subnet_ids             = [data.terraform_remote_state.vpc.outputs.public_subnet_ids[count.index]]
-  vpc_security_group_ids = [module.eks.node_security_group_id]
+  vpc_security_group_ids = [module.eks.node_security_group_id, aws_security_group.cluster_access.id]
 
   create_security_group = false
   create_iam_role       = false
