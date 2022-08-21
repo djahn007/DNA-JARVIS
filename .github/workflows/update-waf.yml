@@ -1,0 +1,112 @@
+
+name: UpdateWaf
+on:
+  repository_dispatch:
+    types: [patch-waf]
+jobs:
+  patch-waf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: aws-actions/setup-sam@v2
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+      - name: install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.20.0'
+      - name: install helm
+        uses: azure/setup-helm@v3
+        with:
+          version: latest
+      - name: update kubeconfig
+        run: |
+          aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER }}
+          echo ${{ github.event.client_payload.waf-id }}
+          echo ${{ github.event.client_payload.namespace }}
+          echo ${{ github.event.client_payload.name }}
+          echo ${{ github.event.client_payload.kind }}
+      - name: Patch waf-id
+        run: |
+          kubectl patch ${{ github.event.client_payload.kind }} ${{ github.event.client_payload.name }} -n ${{ github.event.client_payload.namespace }} -p '{"metadata":{"annotations":{"alb.ingress.kubernetes.io/wafv2-acl-arn":"${{ github.event.client_payload.waf-id }}"}}}'
+      - name: Send to Slack (Success)
+        if: success()
+        uses: slackapi/slack-github-action@v1.18.0
+        with:
+          payload: |
+            {
+              "attachments": [
+                  {
+                      "fallback": "✅ Success Patch ${{ github.event.client_payload.kind }}",
+                      "color": "#3AA3E3",
+                      "text": "✅ Success Patch ${{ github.event.client_payload.kind }}",
+                      "fields": [
+                          {
+                              "title": "Kind",
+                              "value": "${{ github.event.client_payload.kind }}",
+                              "short": true
+                          },
+                          {
+                              "title": "Namespace",
+                              "value": "${{ github.event.client_payload.namespace }}",
+                              "short": true
+                          },
+                          {
+                              "title": "Name",
+                              "value": "${{ github.event.client_payload.name }}",
+                              "short": true
+                          },
+                          {
+                              "title": "waf-id",
+                              "value": "${{ github.event.client_payload.waf-id }}",
+                              "short": true
+                          }
+                      ]
+                  }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      - name: Send to Slack(Failure)
+        if: failure()
+        uses: slackapi/slack-github-action@v1.18.0
+        with:
+          payload: |
+            {
+              "attachments": [
+                  {
+                      "fallback": "❌ Failure Patch ${{ github.event.client_payload.kind }}",
+                      "color": "#3AA3E3",
+                      "text": "❌ Failure Patch ${{ github.event.client_payload.kind }}",
+                      "fields": [
+                          {
+                              "title": "Kind",
+                              "value": "${{ github.event.client_payload.kind }}",
+                              "short": true
+                          },
+                          {
+                              "title": "Namespace",
+                              "value": "${{ github.event.client_payload.namespace }}",
+                              "short": true
+                          },
+                          {
+                              "title": "Name",
+                              "value": "${{ github.event.client_payload.name }}",
+                              "short": true
+                          },
+                          {
+                              "title": "waf-id",
+                              "value": "${{ github.event.client_payload.waf-id }}",
+                              "short": true
+                          }
+                      ]
+                  }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
