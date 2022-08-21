@@ -57,11 +57,11 @@ spec:
         - --log-format=text
         - --source=service
         - --source=ingress
-        - --domain-filter=elesangwon.com
+        - --domain-filter=jarvis-awsdna.com
         - --provider=aws
         - --policy=upsert-only # would prevent ExternalDNS from deleting any records, omit to enable full synchronization
         - --aws-zone-type=public # only look at public hosted zones (valid values are public, private or no value for both)
         - --registry=txt
-        - --txt-owner-id=aws-dna
+        - --txt-owner-id=jarvis-ap-northeast-2
       securityContext:
         fsGroup: 65534 # For ExternalDNS to be able to read Kubernetes and AWS token files

@@ -7,9 +7,13 @@ metadata:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:$ACCOUNT_ID:certificate/
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
 spec:
   rules:
-  - http:
+  - host: msa.jarvis-awsdna.com
+    http:
       paths:
       - path: "/"
         pathType: Prefix
