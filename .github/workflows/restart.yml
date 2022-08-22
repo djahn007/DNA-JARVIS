@@ -39,7 +39,7 @@ jobs:
               "attachments": [
                   {
                       "fallback": "✅ Success Restart Deployment",
-                      "color": "#3AA3E3",
+                      "color": "#36AE7C",
                       "text": "✅ Success Restart Deployment",
                       "fields": [
                           {
@@ -68,7 +68,7 @@ jobs:
               "attachments": [
                   {
                       "fallback": "❌ Failure Restart Deployment",
-                      "color": "#3AA3E3",
+                      "color": "#EB5353",
                       "text": "❌ Failure Restart Deployment",
                       "fields": [
                           {

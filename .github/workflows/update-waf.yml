@@ -41,7 +41,7 @@ jobs:
               "attachments": [
                   {
                       "fallback": "✅ Success Patch ${{ github.event.client_payload.kind }}",
-                      "color": "#3AA3E3",
+                      "color": "#36AE7C",
                       "text": "✅ Success Patch ${{ github.event.client_payload.kind }}",
                       "fields": [
                           {
@@ -80,7 +80,7 @@ jobs:
               "attachments": [
                   {
                       "fallback": "❌ Failure Patch ${{ github.event.client_payload.kind }}",
-                      "color": "#3AA3E3",
+                      "color": "#EB5353",
                       "text": "❌ Failure Patch ${{ github.event.client_payload.kind }}",
                       "fields": [
                           {
