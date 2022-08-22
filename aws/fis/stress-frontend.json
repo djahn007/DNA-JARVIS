@@ -1,0 +1,36 @@
+{
+    "description": "jarvis-stress-frontend",
+    "targets": {
+        "Cluster-Target-1": {
+            "resourceType": "aws:eks:cluster",
+            "resourceArns": [
+                "arn:aws:eks:ap-northeast-2:$ACCOUNT_ID:cluster/jarvis-ap-northeast-2"
+            ],
+            "selectionMode": "ALL"
+        }
+    },
+    "actions": {
+        "sock-shop-frontend-stress": {
+            "actionId": "aws:eks:inject-kubernetes-custom-resource",
+            "parameters": {
+                "kubernetesApiVersion": "chaos-mesh.org/v1alpha1",
+                "kubernetesKind": "StressChaos",
+                "kubernetesNamespace": "sock-shop",
+                "kubernetesSpec": "{\"selector\":{\"namespaces\":[\"sock-shop\"],\"labelSelectors\":{\"name\":\"front-end\"}},\"mode\":\"all\",\"stressors\": {\"cpu\":{\"workers\":1,\"load\":80}},\"duration\":\"2m\"}",
+                "maxDuration": "PT3M"
+            },
+            "targets": {
+                "Cluster": "Cluster-Target-1"
+            }
+        }
+    },
+    "stopConditions": [
+        {
+            "source": "none"
+        }
+    ],
+    "roleArn": "arn:aws:iam::$ACCOUNT_ID:role/aws-service-role/fis.amazonaws.com/AWSServiceRoleForFIS",
+    "tags": {
+        "Team": "jarvis-awsdna"
+    }
+}
