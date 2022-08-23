@@ -171,11 +171,11 @@ extraArgs:
   stderrthreshold: info
   v: 4
   expander: least-waste
-  scale-down-delay-after-add: 3m
+  scale-down-delay-after-add: 2h
   balance-similar-node-groups: true
   max-autoprovisioned-node-group-count: 1
   skip-nodes-with-local-storage: false
-  scan-interval: 30s
+  scan-interval: 1m
   leader-elect: false
   # write-status-configmap: true
   # status-config-map-name: cluster-autoscaler-status
