@@ -32,7 +32,7 @@ jobs:
           echo ${{ github.event.client_payload.namespace }}
       - name: Rollback
         run: |
-          kubectl patch hpa ${{ github.event.client_payload.name }} -p '{"spec":{"maxReplicas":${{ github.event.client_payload.maxreplica }}}' -n ${{ github.event.client_payload.namespace }}
+          kubectl patch hpa ${{ github.event.client_payload.name }} -p '{"spec":{"maxReplicas":${{ github.event.client_payload.maxreplica }}}}' -n ${{ github.event.client_payload.namespace }}
       - name: Send to Slack (Success)
         if: success()
         uses: slackapi/slack-github-action@v1.18.0
