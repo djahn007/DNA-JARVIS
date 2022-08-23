@@ -40,6 +40,21 @@ rules:
 ### 2. Update configmap
 ```
 [to-be]
+
+data:
+  resource_config.yaml: |
+    name: autoscaling/v1/horizontalpodautoscaler
+    namespaces:
+    ignore:
+    - null
+    include:
+    - all
+  - events:
+    - create
+    - delete
+    - error
+
+
 kubectl:
   commands:
     resources:
@@ -52,6 +67,7 @@ kubectl:
     - nodes
     - ingresses
     - services
+    - hpa
     verbs:
     - api-resources
     - api-versions
