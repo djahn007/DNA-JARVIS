@@ -1,0 +1,103 @@
+name: Scale
+on:
+  repository_dispatch:
+    types: [scale]
+jobs:
+  scale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check Github action trigger
+        run:  |
+          echo "Event '${{ github.event.action }}' received from '${{ github.event.client_payload.repository }}'"
+      - uses: aws-actions/setup-sam@v2
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+      - name: install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.20.0'
+      - name: install helm
+        uses: azure/setup-helm@v3
+        with:
+          version: latest
+      - name: update kubeconfig
+        run: |
+          aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER }}
+          echo ${{ github.event.client_payload.name }}
+          echo ${{ github.event.client_payload.maxreplica }}
+          echo ${{ github.event.client_payload.namespace }}
+      - name: Rollback
+        run: |
+          kubectl patch hpa ${{ github.event.client_payload.name }} -p '{"spec":{"maxReplicas":${{ github.event.client_payload.maxreplica }}}' -n ${{ github.event.client_payload.namespace }}
+      - name: Send to Slack (Success)
+        if: success()
+        uses: slackapi/slack-github-action@v1.18.0
+        with:
+          payload: |
+            {
+              "attachments": [
+                  {
+                      "fallback": "✅ Success Scale Hpa MaxReplicas",
+                      "color": "#36AE7C",
+                      "text": "✅ Success Scale Hpa MaxReplicas",
+                      "fields": [
+                          {
+                              "title": "Name",
+                              "value": "${{ github.event.client_payload.name }}",
+                              "short": true
+                          },
+                          {
+                              "title": "Maxreplica",
+                              "value": "${{ github.event.client_payload.maxreplica }}",
+                              "short": true
+                          },
+                          {
+                              "title": "Namespace",
+                              "value": "${{ github.event.client_payload.namespace }}",
+                              "short": true
+                          }
+                      ]
+                  }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      - name: Send to Slack(Failure)
+        if: failure()
+        uses: slackapi/slack-github-action@v1.18.0
+        with:
+          payload: |
+            {
+              "attachments": [
+                  {
+                      "fallback": "❌ Failure Scale Hpa MaxReplicas",
+                      "color": "#EB5353",
+                      "text": "❌ Failure Scale Hpa MaxReplicas",
+                      "fields": [
+                          {
+                              "title": "name",
+                              "value": "${{ github.event.client_payload.name }}",
+                              "short": true
+                          },
+                          {
+                              "title": "Maxreplica",
+                              "value": "${{ github.event.client_payload.maxreplica }}",
+                              "short": true
+                          },
+                          {
+                              "title": "Namespace",
+                              "value": "${{ github.event.client_payload.namespace }}",
+                              "short": true
+                          }
+                      ]
+                  }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.slack_webhook }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
