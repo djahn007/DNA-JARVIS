@@ -126,3 +126,29 @@ WAF의 custom error page로 redirect .
 ```
 
 ![image](https://user-images.githubusercontent.com/50174803/186719248-ea79ec27-82a0-430d-b1f1-22420bbc69b2.png)
+
+## Screenshot : Guide 
+![image](https://user-images.githubusercontent.com/50174803/186720255-98ec7e24-8ac4-4767-94cb-c507e3dc744d.png)
+
+
+## Screenshot : Scale Hpa Maxreplica
+![image](https://user-images.githubusercontent.com/50174803/186721160-c527ff61-dc50-4812-b310-30c6b7591ecc.png)
+![image](https://user-images.githubusercontent.com/50174803/186721471-52dbe87a-3f7e-45f0-8048-74301a314db8.png)
+![image](https://user-images.githubusercontent.com/50174803/186721522-2c41df56-9581-43ef-9e27-326a7e2944cb.png)
+
+## Screenshot : Rollout Restart Deployment 
+![image](https://user-images.githubusercontent.com/50174803/186720377-f0a0083d-c549-4151-96f2-0452ee9b5924.png)
+![image](https://user-images.githubusercontent.com/50174803/186720452-2d809e80-1d26-4226-9dcb-9e4b1c71506e.png)
+
+## Screenshot : Helm Rollback
+![image](https://user-images.githubusercontent.com/50174803/186722144-a0c81125-7bb4-40e0-bd74-f93385dfe63c.png)
+![image](https://user-images.githubusercontent.com/50174803/186722224-6feb5feb-a3db-48cc-b511-59c4f3d335ae.png)
+![image](https://user-images.githubusercontent.com/50174803/186722282-180c080a-2972-4913-a667-91bca105dda8.png)
+
+
+## Screenshot : update-waf 
+![image](https://user-images.githubusercontent.com/50174803/186719610-85977ed3-8249-4b93-bd59-a69e12bf77eb.png)
+![image](https://user-images.githubusercontent.com/50174803/186719765-68e1c100-076c-4c63-a1a5-e0af331f1718.png)
+![image](https://user-images.githubusercontent.com/50174803/186719855-9b2211b9-1076-4089-b975-a9e47b1bb750.png)
+![image](https://user-images.githubusercontent.com/50174803/186720093-f1b9b87c-3422-41c0-a4eb-983dc42a0578.png)
+
